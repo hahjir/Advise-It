@@ -20,7 +20,7 @@ $spring = $_POST["spring"];
 $summer = $_POST["summer"];
 $lastUpdate = date("Y-m-d h:i:s");
 
-if(!empty($_POST)){
+if (!empty($_POST)) {
     $select = "SELECT * FROM `adviseIt` WHERE token = '$token'";
     $result = mysqli_query($cnxn, $select);
 
@@ -29,62 +29,81 @@ if(!empty($_POST)){
 VALUES('$token','$fall','$winter','$spring','$summer','$lastUpdate')";
 
         mysqli_query($cnxn, $sql);
-    } else{
+    } else {
         $sql = "UPDATE adviseIt SET fall = '$fall', winter = '$winter', spring  = '$spring',
                     summer= '$summer', lastUpdate = '$lastUpdate' WHERE token = '$token'";
 
-        mysqli_query($cnxn , $sql);
+        mysqli_query($cnxn, $sql);
     }
 }
-
-
-
 
 
 //echo $result;
 
 
-
-
-if (!empty($_POST)) {
-    echo "<h1>Plan successfully saved!</h1>";
-    echo "<p>Last saved:</p>" . ($lastUpdate);
-
-}
-
 ?>
-<h1><?php echo $_SESSION["token"] ?></h1>
+
+<link rel="stylesheet" href="styles/planner.css">
+<div id="token">
+    <?php
+    print "<h1> Token: " . $_SESSION["token"]
+    ?>
+</div>
 <br>
 
 <form action="#" method="post">
+    <div id="rows">
 
-    <label for="fall">Fall</label><br>
-    <textarea id="fall" name="fall" rows="5">
+        <div class="quarter">
+        <label for="fall">Fall</label><br>
+        <textarea id="fall" name="fall" rows="5">
         <?php echo $winter ?>
     </textarea>
-    <br>
+        <br>
+    </div>
 
-    <label for="winter">Winter</label><br>
-    <textarea id="winter" name="winter" rows="5">
+
+    <div class="quarter">
+        <label for="winter">Winter</label><br>
+        <textarea id="winter" name="winter" rows="5">
         <?php echo $winter ?>
     </textarea>
-    <br>
+        <br>
+    </div>
 
-    <label for="spring">Spring</label><br>
-    <textarea id="spring" name="spring" rows="5">
+
+    <div class="quarter">
+        <label for="spring">Spring</label><br>
+        <textarea id="spring" name="spring" rows="5">
         <?php echo $spring ?>
     </textarea>
-    <br>
+        <br>
+    </div>
 
-    <label for="summer">Summer</label><br><br>
-    <textarea id="summer" name="summer" rows="5">
+
+    <div class="quarter">
+        <label for="summer">Summer</label><br>
+        <textarea id="summer" name="summer" rows="5">
         <?php echo $summer ?>
    </textarea>
-    <br>
+        <br>
+    </div>
+    </div>
 
-    <button type="submit"> Save</button>
-
+    <div id="savePlan">
+    <button id="save" type="submit"> Save</button>
+    </div>
 </form>
+
+<?php
+if (!empty($_POST)) {
+    print "<div id='savedPlan'>
+<h1>Plan successfully saved!</h1>
+<h2> Last saved: . ($lastUpdate)</h2>
+    </div>";
+}
+
+
 
 
 
