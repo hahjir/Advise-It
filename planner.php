@@ -1,41 +1,39 @@
 <?php
-//// Program to display URL of current page.
-//if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
-//    $link = "https";
-//else $link = "http";
-//
-//// Here append the common URL characters.
-//$link .= "://";
-//
-//// Append the host(domain name, ip) to the URL.
-//$link .= $_SERVER['HTTP_HOST'];
-//
-//// Append the requested resource location to the URL
-//$link .= $_SERVER['REQUEST_URI'];
-//
-//// Print the link
-//echo $link . "<br>";
-//
-//
-//$id = substr($link, strrpos($link, '/') + 1);
-//
-//echo $id;
-//?>
-
-
-<?php
 session_start();
-if (empty ($_POST)) {
+require("creds.php");
+$cnxn = mysqli_connect($host, $user, $password, $database)
+or die("error connecting");
+
+
+$validToken = $_GET["token"];
+
+
+if ( !is_null($validToken)) {
+    $_SESSION["token"] = $validToken;
+
+    $query = "SELECT * FROM `adviseIt` WHERE token = '$validToken'";
+    $result = mysqli_query($cnxn, $query);
+
+    if (empty(mysqli_fetch_row($result))) {
+        header("Location: https://halsamach.greenriverdev.com/home.html");
+    }
+    foreach ($result as $row){
+        $newFall = $row["fall"];
+        $newWinter = $row["winter"];
+        $newSpring= $row["spring"];
+        $newSummer = $row["summer"];
+
+    }
+
+}
+
+if (empty ($_POST) && is_null($validToken)) {
     $token = bin2hex(random_bytes(3));
     $_SESSION["token"] = $token;
 }
 
 
-//$_SESSION["token"] = $token
 
-require("creds.php");
-$cnxn = mysqli_connect($host, $user, $password, $database)
-or die("error connecting");
 
 $token = $_SESSION["token"];
 
@@ -82,7 +80,12 @@ VALUES('$token','$fall','$winter','$spring','$summer','$lastUpdate')";
         <div class="quarter">
         <label for="fall">Fall</label><br>
         <textarea id="fall" name="fall" rows="5">
-        <?php echo $winter ?>
+        <?php echo $fall;
+        if(empty($_POST) || is_null($validToken))
+        {
+            echo $newFall;
+        }
+        ?>
     </textarea>
         <br>
     </div>
@@ -91,7 +94,13 @@ VALUES('$token','$fall','$winter','$spring','$summer','$lastUpdate')";
     <div class="quarter">
         <label for="winter">Winter</label><br>
         <textarea id="winter" name="winter" rows="5">
-        <?php echo $winter ?>
+        <?php
+        echo $winter;
+        if(empty($_POST) || is_null($validToken))
+        {
+            echo $newWinter;
+        }
+        ?>
     </textarea>
         <br>
     </div>
@@ -100,7 +109,13 @@ VALUES('$token','$fall','$winter','$spring','$summer','$lastUpdate')";
     <div class="quarter">
         <label for="spring">Spring</label><br>
         <textarea id="spring" name="spring" rows="5">
-        <?php echo $spring ?>
+        <?php
+        echo $spring;
+        if(empty($_POST) || is_null($validToken))
+        {
+          echo $newSpring;
+        }
+        ?>
     </textarea>
         <br>
     </div>
@@ -109,7 +124,13 @@ VALUES('$token','$fall','$winter','$spring','$summer','$lastUpdate')";
     <div class="quarter">
         <label for="summer">Summer</label><br>
         <textarea id="summer" name="summer" rows="5">
-        <?php echo $summer ?>
+        <?php
+        echo $summer;
+        if(empty($_POST) || is_null($validToken))
+        {
+          echo $newSummer;
+        }
+        ?>
    </textarea>
         <br>
     </div>
@@ -118,6 +139,8 @@ VALUES('$token','$fall','$winter','$spring','$summer','$lastUpdate')";
     <div id="savePlan">
     <button id="save" type="submit"> Save</button>
     </div>
+
+    
 </form>
 
 <?php
