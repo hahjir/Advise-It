@@ -1,0 +1,26 @@
+body {
+    background-color: lightgray;
+}
+
+#login {
+    text-align: center;
+}
+
+#username {
+    margin-right: auto;
+    margin-left: auto;
+
+}
+
+#password {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#error {
+    color: red;
+}
+
+h1{
+    text-align: center;
+}
