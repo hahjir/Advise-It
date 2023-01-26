@@ -4,37 +4,37 @@ require("creds.php");
 $cnxn = mysqli_connect($host, $user, $password, $database)
 or die("error connecting");
 
-
 $validToken = $_GET["token"];
 
+if($validToken == null){
+    header("Location: https://halsamach.greenriverdev.com/home.php");
+}
 
-if (!is_null($validToken)) {
+if($_SESSION["token"] != $validToken) {
+    $query = "SELECT * FROM `adviseIt` WHERE token = '$validToken'";
+    $result = mysqli_query($cnxn, $query);
+
+    if (empty(mysqli_fetch_row($result))) {
+       header("Location: https://halsamach.greenriverdev.com/home.php");
+
+    }
+}
+
     $_SESSION["token"] = $validToken;
 
     $query = "SELECT * FROM `adviseIt` WHERE token = '$validToken'";
     $result = mysqli_query($cnxn, $query);
 
-    if (empty(mysqli_fetch_row($result))) {
-        header("Location: https://halsamach.greenriverdev.com/home.html");
-    }
-    foreach ($result as $row) {
-        $newFall = $row["fall"];
-        $newWinter = $row["winter"];
-        $newSpring = $row["spring"];
-        $newSummer = $row["summer"];
-        $newAdvisor = $row["advisor"];
-
+    if(!empty(mysqli_fetch_row($result))){
+        foreach ($result as $row) {
+            $newFall = $row["fall"];
+            $newWinter = $row["winter"];
+            $newSpring = $row["spring"];
+            $newSummer = $row["summer"];
+            $newAdvisor = $row["advisor"];
     }
 
 }
-
-if (empty ($_POST) && is_null($validToken)) {
-    $token = bin2hex(random_bytes(3));
-    $_SESSION["token"] = $token;
-}
-
-
-$token = $_SESSION["token"];
 
 $fall = $_POST["fall"];
 $winter = $_POST["winter"];
@@ -44,23 +44,23 @@ $lastUpdate = date("Y-m-d h:i:s");
 $advisor = $_POST["advisor"];
 
 if (!empty($_POST)) {
-    $select = "SELECT * FROM `adviseIt` WHERE token = '$token'";
+    $select = "SELECT * FROM `adviseIt` WHERE token = '$validToken'";
     $result = mysqli_query($cnxn, $select);
 
     if (empty(mysqli_fetch_row($result))) {
         $sql = "INSERT INTO adviseIt (token, fall, winter, spring, summer, lastUpdate, advisor)
-VALUES('$token','$fall','$winter','$spring','$summer','$lastUpdate', '$advisor')";
+VALUES('$validToken','$fall','$winter','$spring','$summer','$lastUpdate', '$advisor')";
 
         mysqli_query($cnxn, $sql);
     } else {
         $sql = "UPDATE adviseIt SET fall = '$fall', winter = '$winter', spring  = '$spring',
-                    summer= '$summer', lastUpdate = '$lastUpdate', advisor = $advisor WHERE token = '$token'";
+                    summer= '$summer', lastUpdate = '$lastUpdate', advisor = '$advisor' WHERE token = '$validToken'";
 
         mysqli_query($cnxn, $sql);
     }
 }
 
-if (empty($_POST) || is_null($validToken)) {
+if (empty($_POST)) {
     $_SESSION["fall"] = $newFall;
     $_SESSION["winter"] = $newWinter;
     $_SESSION["spring"] = $newSpring;
@@ -68,16 +68,15 @@ if (empty($_POST) || is_null($validToken)) {
     $_SESSION["advisor"] = $newAdvisor;
 }
 
-$_SESSION["fall"] = $fall;
-$_SESSION["winter"] = $winter;
-$_SESSION["spring"] = $spring;
-$_SESSION["summer"] = $summer;
-$_SESSION["lastUpdate"] = $lastUpdate;
-$_SESSION["advisor"] = $advisor;
+if (!empty($_POST)) {
+    $_SESSION["fall"] = $fall;
+    $_SESSION["winter"] = $winter;
+    $_SESSION["spring"] = $spring;
+    $_SESSION["summer"] = $summer;
+    $_SESSION["lastUpdate"] = $lastUpdate;
+    $_SESSION["advisor"] = $advisor;
+}
 
-
-
-//echo $result;
 
 
 ?>
@@ -85,7 +84,7 @@ $_SESSION["advisor"] = $advisor;
     <link rel="stylesheet" href="styles/planner.css">
     <div id="token">
         <?php
-        print "<h1> Token: " . $_SESSION["token"]
+        print "<h1> Token: " . $validToken
         ?>
     </div>
     <br>

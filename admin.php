@@ -28,6 +28,7 @@ if ($_SESSION["admin"] != "admin") {
         <th>summer</th>
         <th>lastUpdate</th>
         <th>advisor</th>
+        <th>URL</th>
     </tr>
     </thead>
 
@@ -37,7 +38,8 @@ if ($_SESSION["admin"] != "admin") {
     $result = mysqli_query($cnxn, $query);
 
     foreach ($result as $row) {
-        $fall = "fall";
+        $token = $row['token'];
+        $fall = $row['fall'];
         $winter = $row['winter'];
         $spring = $row['spring'];
         $summer = $row['summer'];
@@ -45,14 +47,17 @@ if ($_SESSION["admin"] != "admin") {
         $advisor = $row['advisor'];
 
 
+
         echo "
             <tr>
+                <td>$token</td>
                 <td>$fall</td>
                 <td>$winter</td>
                 <td>$spring</td>
                 <td>$summer</td>
                 <td>$lastUpdate</td>
                 <td>$advisor</td>
+                <td><a href='planner.php?token=$token'>$token</a></td>
             </tr>";
     }
     ?>
