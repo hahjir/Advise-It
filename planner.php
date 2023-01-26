@@ -60,6 +60,22 @@ VALUES('$token','$fall','$winter','$spring','$summer','$lastUpdate', '$advisor')
     }
 }
 
+if (empty($_POST) || is_null($validToken)) {
+    $_SESSION["fall"] = $newFall;
+    $_SESSION["winter"] = $newWinter;
+    $_SESSION["spring"] = $newSpring;
+    $_SESSION["summer"] = $newSummer;
+    $_SESSION["advisor"] = $newAdvisor;
+}
+
+$_SESSION["fall"] = $fall;
+$_SESSION["winter"] = $winter;
+$_SESSION["spring"] = $spring;
+$_SESSION["summer"] = $summer;
+$_SESSION["lastUpdate"] = $lastUpdate;
+$_SESSION["advisor"] = $advisor;
+
+
 
 //echo $result;
 
@@ -143,12 +159,16 @@ VALUES('$token','$fall','$winter','$spring','$summer','$lastUpdate', '$advisor')
         </textarea>
         </div>
 
-
         <div id="savePlan">
             <button id="save" type="submit"> Save</button>
         </div>
 
+    </form>
 
+    <form action="print.php" method="post">
+        <div id="print">
+            <button id="print" type="submit"> Print</button>
+        </div>
     </form>
 
 <?php
