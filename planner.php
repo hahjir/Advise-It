@@ -77,6 +77,24 @@ if (!empty($_POST)) {
     $_SESSION["advisor"] = $advisor;
 }
 
+echo $lastUpdate;
+
+$year = substr($lastUpdate, 0, 4);
+$month = substr($lastUpdate, 5, 2);
+echo "<br>";
+echo $year;
+echo "<br>";
+echo $month;
+
+//if(intval($month) == 01 || intval($month) <7 )
+//{
+//
+//
+//}
+
+
+
+
 
 
 ?>
@@ -88,6 +106,8 @@ if (!empty($_POST)) {
         ?>
     </div>
     <br>
+
+    <button id="previousyear">Add Year</button>
 
     <form action="#" method="post">
         <div id="rows">
@@ -157,6 +177,7 @@ if (!empty($_POST)) {
                  ?>
         </textarea>
         </div>
+        <button id="newyear">Add Year</button>
 
         <div id="savePlan">
             <button id="save" type="submit"> Save</button>
